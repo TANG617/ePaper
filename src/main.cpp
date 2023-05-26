@@ -2,110 +2,47 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-05-26 17:19:50
  * @LastEditors: LiTang litang0617@outlook.com
- * @LastEditTime: 2023-05-26 18:23:45
- * @FilePath: /esp32-waveshare-epd/Users/timli/Documents/PlatformIO/Projects/ePaper/src/main.cpp
+ * @LastEditTime: 2023-05-26 19:41:52
+ * @FilePath: /ePaper/src/main.cpp
  * @Description: 
  * 
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
  */
+/*
+  Blink
 
-#include "DEV_Config.h"
-#include "EPD.h"
-#include "GUI_Paint.h"
-#include "imagedata.h"
+  Turns an LED on for one second, then off for one second, repeatedly.
+
+  Most Arduinos have an on-board LED you can control. On the UNO, MEGA and ZERO
+  it is attached to digital pin 13, on MKR1000 on pin 6. LED_BUILTIN is set to
+  the correct LED pin independent of which board is used.
+  If you want to know what pin the on-board LED is connected to on your Arduino
+  model, check the Technical Specs of your board at:
+  https://www.arduino.cc/en/Main/Products
+
+  modified 8 May 2014
+  by Scott Fitzgerald
+  modified 2 Sep 2016
+  by Arturo Guadalupi
+  modified 8 Sep 2016
+  by Colby Newman
+
+  This example code is in the public domain.
+
+  https://www.arduino.cc/en/Tutorial/BuiltInExamples/Blink
+*/
 #include "Arduino.h"
-#include "SPI.h"
-#include <stdlib.h>
-#define printf Serial.printf
-
-/* Entry point ----------------------------------------------------------------*/
-void setup()
-{
-  printf("EPD_4IN2B_V2_test Demo\r\n");
-  DEV_Module_Init();
-
-  printf("e-Paper Init and Clear...\r\n");
-  EPD_4IN2B_V2_Init();
-  printf("Step 1\r\n");
-  EPD_4IN2B_V2_Clear();
-  printf("Inited\r\n");
-  DEV_Delay_ms(500);
-
-  //Create a new image cache named IMAGE_BW and fill it with white
-  UBYTE *BlackImage, *RYImage; // Red or Yellow
-  UWORD Imagesize = ((EPD_4IN2B_V2_WIDTH % 8 == 0) ? (EPD_4IN2B_V2_WIDTH / 8 ) : (EPD_4IN2B_V2_WIDTH / 8 + 1)) * EPD_4IN2B_V2_HEIGHT;
-  if ((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) {
-    printf("Failed to apply for black memory...\r\n");
-    while(1);
-  }
-  if ((RYImage = (UBYTE *)malloc(Imagesize)) == NULL) {
-    printf("Failed to apply for red memory...\r\n");
-    while(1);
-  }
-  printf("NewImage:BlackImage and RYImage\r\n");
-  Paint_NewImage(BlackImage, EPD_4IN2B_V2_WIDTH, EPD_4IN2B_V2_HEIGHT, 180, WHITE);
-  Paint_NewImage(RYImage, EPD_4IN2B_V2_WIDTH, EPD_4IN2B_V2_HEIGHT, 180, WHITE);
-
-  //Select Image
-  Paint_SelectImage(BlackImage);
-  Paint_Clear(WHITE);
-  Paint_SelectImage(RYImage);
-  Paint_Clear(WHITE);
-
-#if 1   // show image for array    
-  printf("show image for array\r\n");
-  EPD_4IN2B_V2_Display(gImage_4in2bc_b, gImage_4in2bc_ry);
-  DEV_Delay_ms(2000);
-#endif
-
-#if 1   // Drawing on the image
-  /*Horizontal screen*/
-  //1.Draw black image
-  printf("Draw black image\r\n");
-  Paint_SelectImage(BlackImage);
-  Paint_Clear(WHITE);
-  Paint_DrawPoint(10, 80, BLACK, DOT_PIXEL_1X1, DOT_STYLE_DFT);
-  Paint_DrawPoint(10, 90, BLACK, DOT_PIXEL_2X2, DOT_STYLE_DFT);
-  Paint_DrawPoint(10, 100, BLACK, DOT_PIXEL_3X3, DOT_STYLE_DFT);
-  Paint_DrawPoint(10, 110, BLACK, DOT_PIXEL_3X3, DOT_STYLE_DFT);
-  Paint_DrawLine(20, 70, 70, 120, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-  Paint_DrawLine(70, 70, 20, 120, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-  Paint_DrawRectangle(20, 70, 70, 120, BLACK, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
-  Paint_DrawRectangle(80, 70, 130, 120, BLACK, DOT_PIXEL_1X1, DRAW_FILL_FULL);
-  Paint_DrawString_EN(10, 0, "waveshare", &Font16, BLACK, WHITE);
-  Paint_DrawString_CN(130, 20, "微雪电子", &Font24CN, WHITE, BLACK);
-  Paint_DrawNum(10, 50, 987654321, &Font16, WHITE, BLACK);
-
-  //2.Draw red image
-  printf("Draw red image\r\n");
-  Paint_SelectImage(RYImage);
-  Paint_Clear(WHITE);
-  Paint_DrawCircle(160, 95, 20, BLACK, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
-  Paint_DrawCircle(210, 95, 20, BLACK, DOT_PIXEL_1X1, DRAW_FILL_FULL);
-  Paint_DrawLine(85, 95, 125, 95, BLACK, DOT_PIXEL_1X1, LINE_STYLE_DOTTED);
-  Paint_DrawLine(105, 75, 105, 115, BLACK, DOT_PIXEL_1X1, LINE_STYLE_DOTTED);
-  Paint_DrawString_CN(130, 0, "你好abc", &Font12CN, BLACK, WHITE);
-  Paint_DrawString_EN(10, 20, "hello world", &Font12, WHITE, BLACK);
-  Paint_DrawNum(10, 33, 123456789, &Font12, BLACK, WHITE);
-
-  printf("EPD_Display\r\n");
-  EPD_4IN2B_V2_Display(BlackImage, RYImage);
-  DEV_Delay_ms(2000);
-#endif
-
-  printf("Clear...\r\n");
-  EPD_4IN2B_V2_Clear();
-
-  printf("Goto Sleep...\r\n");
-  EPD_4IN2B_V2_Sleep();
-  free(BlackImage);
-  free(RYImage);
-  BlackImage = NULL;
-  RYImage = NULL;
+#define LED_BUILTIN 33
+// the setup function runs once when you press reset or power the board
+void setup() {
+  // initialize digital pin LED_BUILTIN as an output.
+//   pinMode(LED_BUILTIN, OUTPUT);
 }
 
-/* The main loop -------------------------------------------------------------*/
-void loop()
-{
-  //
+// the loop function runs over and over again forever
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+  delay(1000);                      // wait for a second
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+  delay(1000);                      // wait for a second
 }
