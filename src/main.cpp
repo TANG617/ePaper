@@ -15,7 +15,7 @@
 #include <SPI.h>
 #include "Arduino.h"
 
-static const int spiClk = 1000000; // 1000 KHz
+static const int spiClk = 10000; // 10 KHz
 #define SCK 18
 #define DC 5
 // #define MISO 4
@@ -23,7 +23,7 @@ static const int spiClk = 1000000; // 1000 KHz
 #define SS 16
 
 
-#define TIME 100
+#define TIME 1000
 //uninitalised pointers to SPI objects
 SPIClass * spi = NULL;
 void spiWrite(SPIClass *spi, byte data);
@@ -52,7 +52,7 @@ void loop() {
     SendData(spi,0x0f);
     delay(TIME);
 
-    return;
+    
     SendCommand(spi,0x10);
     for (int j = 0; j < 400; j++) {
         for (int i = 0; i < 300; i++) {
