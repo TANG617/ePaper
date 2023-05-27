@@ -17,14 +17,18 @@
 
 static const int spiClk = 1000000; // 1000 KHz
 #define SCK 18
-#define MISO 4
+#define DC 5
+// #define MISO 4
 #define MOSI 17
 #define SS 16
-#define DC 5
+
+
+#define TIME 100
 //uninitalised pointers to SPI objects
 SPIClass * spi = NULL;
 void spiWrite(SPIClass *spi, byte data);
 void SendCommand(SPIClass *spi, byte Reg);
+void SendData(SPIClass *spi, byte Reg);
 void InitPin();
 
 
@@ -32,14 +36,38 @@ void setup() {
   //initialise two instances of the SPIClass attached to VSPI and HSPI respectively
   spi = new SPIClass(HSPI);
   spi->begin(SCK,-1,MOSI,SS);
+  InitPin();
 }
 
 // the loop function runs over and over again until power down or reset
 void loop() {
   //use the SPI buses
-  InitPin();
-  SendCommand(spi, 0XAF); // junk data to illustrate usage
-  delay(100);
+    
+    // SendCommand(spi, 0XAF); // junk data to illustrate usage
+
+
+    SendCommand(spi,0x04);
+    delay(TIME);
+    SendCommand(spi,0x00);
+    SendData(spi,0x0f);
+    delay(TIME);
+
+    return;
+    SendCommand(spi,0x10);
+    for (int j = 0; j < 400; j++) {
+        for (int i = 0; i < 300; i++) {
+            SendData(spi,0xFF);
+        }
+    }
+
+    SendCommand(spi,0x13);
+    for (int j = 0; j < 400; j++) {
+        for (int i = 0; i < 300; i++) {
+           SendData(spi,0xFF);
+        }
+    }
+    delay(TIME);
+    SendCommand(spi,0x12); 
 }
 
 void InitPin()
@@ -52,6 +80,14 @@ void InitPin()
 void SendCommand(SPIClass *spi, byte Reg)
 {
     digitalWrite(DC, 0);
+    digitalWrite(SS, 0);
+    spiWrite(spi,Reg);
+    digitalWrite(SS, 1);
+}
+
+void SendData(SPIClass *spi, byte Reg)
+{
+    digitalWrite(DC, 1);
     digitalWrite(SS, 0);
     spiWrite(spi,Reg);
     digitalWrite(SS, 1);
