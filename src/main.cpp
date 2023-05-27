@@ -1,103 +1,48 @@
-
-/* The ESP32 has four SPi buses, however as of right now only two of
- * them are available to use, HSPI and VSPI. Simply using the SPI API 
- * as illustrated in Arduino examples will use VSPI, leaving HSPI unused.
- * 
- * However if we simply intialise two instance of the SPI class for both
- * of these buses both can be used. However when just using these the Arduino
- * way only will actually be outputting at a time.
- * 
- * Logic analyser capture is in the same folder as this example as
- * "multiple_bus_output.png"
- * 
- * created 30/04/2018 by Alistair Symonds
- */
-#include <SPI.h>
-#include "Arduino.h"
-
-static const int spiClk = 10000; // 10 KHz
-#define SCK 18
-#define DC 5
-// #define MISO 4
-#define MOSI 17
-#define SS 16
+#include "ePaper.h"
 
 
-#define TIME 1000
-//uninitalised pointers to SPI objects
-SPIClass * spi = NULL;
-void spiWrite(SPIClass *spi, byte data);
-void SendCommand(SPIClass *spi, byte Reg);
-void SendData(SPIClass *spi, byte Reg);
-void InitPin();
+
+
+//IO settings
+int BUSY_Pin = 32; 
+int RES_Pin = 33; 
+int DC_Pin = 5; 
+int CS_Pin = 16; 
+// SCLK--GPIO23
+// MOSI---GPIO18
 
 
 void setup() {
-  //initialise two instances of the SPIClass attached to VSPI and HSPI respectively
-  spi = new SPIClass(HSPI);
-  spi->begin(SCK,-1,MOSI,SS);
-  InitPin();
+   pinMode(BUSY_Pin, INPUT); 
+   pinMode(RES_Pin, OUTPUT);  
+   pinMode(DC_Pin, OUTPUT);    
+   pinMode(CS_Pin, OUTPUT);    
+   //SPI
+   SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0)); 
+   SPI.begin (23,-1,18,CS_Pin);  
 }
 
-// the loop function runs over and over again until power down or reset
+//Tips//
+/*When the electronic paper is refreshed in full screen, the picture flicker is a normal phenomenon, and the main function is to clear the display afterimage in the previous picture.
+  When the local refresh is performed, the screen does not flash.*/
+/*When you need to transplant the driver, you only need to change the corresponding IO. The BUSY pin is the input mode and the others are the output mode. */
+  
 void loop() {
-  //use the SPI buses
+   //Full screen refresh
+    EPD_init(); //EPD init
+    PIC_display(gImage_BW,gImage_R);//EPD_picture1
+    EPD_sleep();//EPD_sleep,Sleep instruction is necessary, please do not delete!!!
+    delay(20000);    
     
-    // SendCommand(spi, 0XAF); // junk data to illustrate usage
-
-
-    SendCommand(spi,0x04);
-    delay(TIME);
-    SendCommand(spi,0x00);
-    SendData(spi,0x0f);
-    delay(TIME);
-
+    EPD_init(); //EPD init
+    PIC_display(gImage_BW1,gImage_R1);//EPD_picture1
+    EPD_sleep();//EPD_sleep,Sleep instruction is necessary, please do not delete!!!
+    delay(20000);   
     
-    SendCommand(spi,0x10);
-    for (int j = 0; j < 400; j++) {
-        for (int i = 0; i < 300; i++) {
-            SendData(spi,0xFF);
-        }
-    }
-
-    SendCommand(spi,0x13);
-    for (int j = 0; j < 400; j++) {
-        for (int i = 0; i < 300; i++) {
-           SendData(spi,0xFF);
-        }
-    }
-    delay(TIME);
-    SendCommand(spi,0x12); 
-}
-
-void InitPin()
-{
-    pinMode(DC,OUTPUT);
-    pinMode(SS,OUTPUT);
-}
-
-
-void SendCommand(SPIClass *spi, byte Reg)
-{
-    digitalWrite(DC, 0);
-    digitalWrite(SS, 0);
-    spiWrite(spi,Reg);
-    digitalWrite(SS, 1);
-}
-
-void SendData(SPIClass *spi, byte Reg)
-{
-    digitalWrite(DC, 1);
-    digitalWrite(SS, 0);
-    spiWrite(spi,Reg);
-    digitalWrite(SS, 1);
-}
-
-void spiWrite(SPIClass *spi, byte data) {
-  //use it as you would the regular arduino SPI API
-  spi->beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
-  digitalWrite(spi->pinSS(), LOW); //pull SS slow to prep other end for transfer
-  spi->transfer(data);
-  digitalWrite(spi->pinSS(), HIGH); //pull ss high to signify end of data transfer
-  spi->endTransaction();
+    //Clean
+    EPD_init(); //EPD init
+    PIC_display_Clear();//EPD Clear
+    EPD_sleep();//EPD_sleep,Sleep instruction is necessary, please do not delete!!!
+    delay(20000); 
+    
 }
