@@ -1,48 +1,48 @@
-/*
- * @Author: LiTang litang0617@outlook.com
- * @Date: 2023-05-26 17:19:50
- * @LastEditors: LiTang litang0617@outlook.com
- * @LastEditTime: 2023-05-26 19:41:52
- * @FilePath: /ePaper/src/main.cpp
- * @Description: 
+
+/* The ESP32 has four SPi buses, however as of right now only two of
+ * them are available to use, HSPI and VSPI. Simply using the SPI API 
+ * as illustrated in Arduino examples will use VSPI, leaving HSPI unused.
  * 
- * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
+ * However if we simply intialise two instance of the SPI class for both
+ * of these buses both can be used. However when just using these the Arduino
+ * way only will actually be outputting at a time.
+ * 
+ * Logic analyser capture is in the same folder as this example as
+ * "multiple_bus_output.png"
+ * 
+ * created 30/04/2018 by Alistair Symonds
  */
-/*
-  Blink
-
-  Turns an LED on for one second, then off for one second, repeatedly.
-
-  Most Arduinos have an on-board LED you can control. On the UNO, MEGA and ZERO
-  it is attached to digital pin 13, on MKR1000 on pin 6. LED_BUILTIN is set to
-  the correct LED pin independent of which board is used.
-  If you want to know what pin the on-board LED is connected to on your Arduino
-  model, check the Technical Specs of your board at:
-  https://www.arduino.cc/en/Main/Products
-
-  modified 8 May 2014
-  by Scott Fitzgerald
-  modified 2 Sep 2016
-  by Arturo Guadalupi
-  modified 8 Sep 2016
-  by Colby Newman
-
-  This example code is in the public domain.
-
-  https://www.arduino.cc/en/Tutorial/BuiltInExamples/Blink
-*/
+#include <SPI.h>
 #include "Arduino.h"
-#define LED_BUILTIN 14
-// the setup function runs once when you press reset or power the board
+
+static const int spiClk = 1000000; // 1000 KHz
+#define SCK 18
+#define MISO 5
+#define MOSI 17
+#define SS 16
+//uninitalised pointers to SPI objects
+SPIClass * spi = NULL;
+void spiCommand(SPIClass *spi, byte data);
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+  //initialise two instances of the SPIClass attached to VSPI and HSPI respectively
+  spi = new SPIClass(HSPI);
+  spi->begin(SCK,MISO,MOSI,SS);
+
+
 }
 
-// the loop function runs over and over again forever
+// the loop function runs over and over again until power down or reset
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-  delay(1000);                      // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
-  delay(1000);                      // wait for a second
+  //use the SPI buses
+  spiCommand(spi, 0XAF); // junk data to illustrate usage
+  delay(100);
+}
+
+void spiCommand(SPIClass *spi, byte data) {
+  //use it as you would the regular arduino SPI API
+  spi->beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
+  digitalWrite(spi->pinSS(), LOW); //pull SS slow to prep other end for transfer
+  spi->transfer(data);
+  digitalWrite(spi->pinSS(), HIGH); //pull ss high to signify end of data transfer
+  spi->endTransaction();
 }
