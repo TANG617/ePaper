@@ -17,28 +17,47 @@
 
 static const int spiClk = 1000000; // 1000 KHz
 #define SCK 18
-#define MISO 5
+#define MISO 4
 #define MOSI 17
 #define SS 16
+#define DC 5
 //uninitalised pointers to SPI objects
 SPIClass * spi = NULL;
-void spiCommand(SPIClass *spi, byte data);
+void spiWrite(SPIClass *spi, byte data);
+void SendCommand(SPIClass *spi, byte Reg);
+void InitPin();
 
 
 void setup() {
   //initialise two instances of the SPIClass attached to VSPI and HSPI respectively
   spi = new SPIClass(HSPI);
-  spi->begin(SCK,MISO,MOSI,SS);
+  spi->begin(SCK,-1,MOSI,SS);
 }
 
 // the loop function runs over and over again until power down or reset
 void loop() {
   //use the SPI buses
-  spiCommand(spi, 0XAF); // junk data to illustrate usage
+  InitPin();
+  SendCommand(spi, 0XAF); // junk data to illustrate usage
   delay(100);
 }
 
-void spiCommand(SPIClass *spi, byte data) {
+void InitPin()
+{
+    pinMode(DC,OUTPUT);
+    pinMode(SS,OUTPUT);
+}
+
+
+void SendCommand(SPIClass *spi, byte Reg)
+{
+    digitalWrite(DC, 0);
+    digitalWrite(SS, 0);
+    spiWrite(spi,Reg);
+    digitalWrite(SS, 1);
+}
+
+void spiWrite(SPIClass *spi, byte data) {
   //use it as you would the regular arduino SPI API
   spi->beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
   digitalWrite(spi->pinSS(), LOW); //pull SS slow to prep other end for transfer
