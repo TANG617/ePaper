@@ -23,12 +23,12 @@ static const int spiClk = 1000000; // 1000 KHz
 //uninitalised pointers to SPI objects
 SPIClass * spi = NULL;
 void spiCommand(SPIClass *spi, byte data);
+
+
 void setup() {
   //initialise two instances of the SPIClass attached to VSPI and HSPI respectively
   spi = new SPIClass(HSPI);
   spi->begin(SCK,MISO,MOSI,SS);
-
-
 }
 
 // the loop function runs over and over again until power down or reset
