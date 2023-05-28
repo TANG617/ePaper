@@ -17,7 +17,7 @@ void setup()
   display.hibernate();
 }
 
-const char HelloWorld[] = "We hold these truths to be self-evident,\n that all men are created equal,\n that they are endowed by their Creator with certain unalienable Rights,\n that among these are \nLife, Liberty and the pursuit of Happiness.\n";
+const char HelloWorld[] = "When in the Course of human events, it becomes necessary for one people to dissolve the political bands which have connected them with another, and to assume among the powers of the earth, the separate and equal station to which the Laws of Nature and of Nature's God entitle them, a decent respect to the opinions of mankind requires that they should declare the causes which impel them to the separation.";
 
 
 
@@ -27,10 +27,10 @@ void loop() {};
 void helloWorld()
 {
   display.setRotation(0);
-  display.setFont(&FreeMonoBold9pt7b);
-  display.setTextColor(GxEPD_BLACK);
+  display.setFont(&FreeSansBold9pt7b);
+  display.setTextColor(GxEPD_RED);
   int16_t tbx, tby; uint16_t tbw, tbh;
-  display.getTextBounds(HelloWorld, 0, 0, &tbx, &tby, &tbw, &tbh);
+  display.getTextBounds(HelloWorld, 25, 25, &tbx, &tby, &tbw, &tbh);
   // center the bounding box by transposition of the origin:
   uint16_t x = ((display.width() - tbw) / 2) - tbx;
   uint16_t y = ((display.height() - tbh) / 2) - tby;
