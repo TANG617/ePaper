@@ -1,25 +1,22 @@
 #include "ePaper.h"
 
-
-
-
 //IO settings
 int BUSY_Pin = 32; 
 int RES_Pin = 33; 
 int DC_Pin = 5; 
 int CS_Pin = 16; 
-// SCLK--GPIO23
-// MOSI---GPIO18
+int SCLK_Pin = 23;
+int MOSI_Pin = 18;
 
 
 void setup() {
    pinMode(BUSY_Pin, INPUT); 
-   pinMode(RES_Pin, OUTPUT);  
-   pinMode(DC_Pin, OUTPUT);    
-   pinMode(CS_Pin, OUTPUT);    
+   pinMode(RES_Pin,  OUTPUT);  
+   pinMode(DC_Pin,   OUTPUT);    
+   pinMode(CS_Pin,   OUTPUT);    
    //SPI
    SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0)); 
-   SPI.begin (23,-1,18,CS_Pin);  
+   SPI.begin (SCLK_Pin,-1,MOSI_Pin,CS_Pin);  
 }
 
 //Tips//
