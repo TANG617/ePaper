@@ -2,7 +2,7 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-05-28 00:28:22
  * @LastEditors: LiTang litang0617@outlook.com
- * @LastEditTime: 2023-05-28 00:41:30
+ * @LastEditTime: 2023-05-28 11:42:06
  * @FilePath: /ePaper/src/ePaper.h
  * @Description: ePaper
  * 
@@ -41,7 +41,14 @@ extern int CS_Pin;
 
 
 
-#include "Ap_29demo.h"
+// #include "Ap_29demo.h"
+// #include "img_simpson.h"
+// #include "R_R.h"
+// #include "R.h"
+// #include "Word.h"
+// #include "BW.h"
+
+
 #include "Arduino.h"
 #include <SPI.h>
 #include <pgmspace.h>
