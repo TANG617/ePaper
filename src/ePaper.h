@@ -2,7 +2,7 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-05-28 00:28:22
  * @LastEditors: LiTang litang0617@outlook.com
- * @LastEditTime: 2023-06-01 18:21:11
+ * @LastEditTime: 2023-06-01 19:07:02
  * @FilePath: /ePaper/src/ePaper.h
  * @Description: ePaper
  * 
@@ -31,10 +31,10 @@
 
 
 #include <GxEPD2_BW.h>
-#include <GxEPD2_3C.h>
+// #include <GxEPD2_3C.h>
 
 #include <Fonts/FreeMonoBold9pt7b.h>
-#include <Fonts/FreeSansBold9pt7b.h>
+#include <Fonts/FreeSansBold24pt7b.h>
 
 
 
