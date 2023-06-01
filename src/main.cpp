@@ -1,8 +1,19 @@
+/*
+ * @Author: LiTang litang0617@outlook.com
+ * @Date: 2023-06-01 17:33:37
+ * @LastEditors: LiTang litang0617@outlook.com
+ * @LastEditTime: 2023-06-01 18:46:25
+ * @FilePath: /ePaper/src/main.cpp
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
+ */
 #include "ePaper.h"
 
 GxEPD2_3C<GxEPD2_420c_1680, GxEPD2_420c_1680::HEIGHT> display(GxEPD2_420c_1680(/*CS*/ SS_PIN, /*DC*/ DC_PIN, /*RST*/ RES_PIN, /*BUSY*/ BUSY_PIN)); // 
 
-SPIClass ePaper_SPI;
+// SPIClass ePaper_SPI(HSPI);
+SPIClass ePaper_SPI(FSPI);
 
 void helloWorld();
 
@@ -11,6 +22,7 @@ void setup()
 {
   //display.init(115200); // default 10ms reset pulse, e.g. for bare panels with DESPI-C02
   ePaper_SPI.begin(CLK_PIN,-1,MOSI_PIN,SS_PIN);
+  // ePaper_SPI.begin();
   // SPISettings(10000000, MSBFIRST, SPI_MODE0)
   display.init(115200, true, 2, false, ePaper_SPI , SPISettings(10000000, MSBFIRST, SPI_MODE0)); // USE THIS for Waveshare boards with "clever" reset circuit, 2ms reset pulse
   helloWorld();

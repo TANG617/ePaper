@@ -2,7 +2,7 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-05-28 00:28:22
  * @LastEditors: LiTang litang0617@outlook.com
- * @LastEditTime: 2023-05-28 14:01:43
+ * @LastEditTime: 2023-06-01 18:21:11
  * @FilePath: /ePaper/src/ePaper.h
  * @Description: ePaper
  * 
@@ -17,12 +17,16 @@
 
 
 //IO settings
-#define  BUSY_PIN 32 
-#define  RES_PIN 33
-#define MOSI_PIN 18
-#define CLK_PIN 23
-#define SS_PIN 16
-#define DC_PIN 5
+#define  BUSY_PIN 4 
+#define  RES_PIN  7
+#define  DC_PIN   6
+#define  SS_PIN   10
+#define  CLK_PIN  3
+#define  MOSI_PIN 2
+
+
+
+
 
 
 
