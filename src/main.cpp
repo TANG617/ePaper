@@ -2,7 +2,7 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-06-01 17:33:37
  * @LastEditors: LiTang litang0617@outlook.com
- * @LastEditTime: 2023-06-02 13:22:28
+ * @LastEditTime: 2023-06-02 13:26:24
  * @FilePath: /ePaper/src/main.cpp
  * @Description: ePaper Partial Update
  * 
@@ -63,6 +63,13 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
     // lv_disp_flush_ready(disp);
 }
 
+
+
+void my_print(const char * buf)
+{
+    Serial.printf(buf);
+    Serial.flush();
+}
 
 void helloFullScreenPartialMode()
 {
@@ -131,6 +138,7 @@ void helloFullScreenPartialMode()
 
 void setup()
 {
+  lv_log_register_print_cb(my_print);
   //display.init(115200); // default 10ms reset pulse, e.g. for bare panels with DESPI-C02
   ePaper_SPI.begin(CLK_PIN,5,MOSI_PIN,SS_PIN);
   // ePaper_SPI.begin();
