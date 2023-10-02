@@ -2,7 +2,7 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-05-28 00:28:22
  * @LastEditors: LiTang litang0617@outlook.com
- * @LastEditTime: 2023-06-02 16:29:32
+ * @LastEditTime: 2023-06-11 13:14:36
  * @FilePath: /ePaper/src/ePaper.h
  * @Description: ePaper
  * 
@@ -16,14 +16,21 @@
 #include <SPI.h>
 
 
-//IO settings
-#define  BUSY_PIN 4 
-#define  RES_PIN  7
-#define  DC_PIN   6
-#define  SS_PIN   10
-#define  CLK_PIN  3
-#define  MOSI_PIN 2
+// //IO settings
+// #define  BUSY_PIN 4 
+// #define  RES_PIN  7
+// #define  DC_PIN   6
+// #define  SS_PIN   10
+// #define  CLK_PIN  3
+// #define  MOSI_PIN 2
 
+
+#define  BUSY_PIN 0
+#define  RES_PIN  1
+#define  DC_PIN   2
+#define  SS_PIN   3
+#define  CLK_PIN  9
+#define  MOSI_PIN 10
 
 
 
