@@ -1,7 +1,7 @@
 /*
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-10-10 15:06:38
- * @LastEditTime: 2023-10-10 15:16:38
+ * @LastEditTime: 2023-10-10 18:51:11
  * @FilePath: /ePaper/src/BLE.cpp
  * @Description: 
  */
@@ -9,7 +9,7 @@
 bool deviceConnected = false;
 uint8_t txValue = 0;
 long lastMsg = 0;
-String rxload="Test\n";
+String rxload="";
 BLECharacteristic *pNotifyCharacteristic;
 BLECharacteristic *pReadCharacteristic;
 

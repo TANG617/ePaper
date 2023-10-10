@@ -40,7 +40,7 @@
 #include <GxEPD2_BW.h>
 // #include <GxEPD2_3C.h>
 
-#include <Fonts/FreeMonoBold9pt7b.h>
+#include <Fonts/FreeMonoBold24pt7b.h>
 #include <Fonts/FreeSansBold24pt7b.h>
 
 

@@ -2,7 +2,7 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-06-01 17:33:37
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-10-10 15:28:24
+ * @LastEditTime: 2023-10-10 18:54:25
  * @FilePath: /ePaper/src/main.cpp
  * @Description: ePaper Partial Update
  * 
@@ -10,7 +10,9 @@
  */
 #include "ePaper.h"
 #include "BLE.h"
+#include "currentTime.h"
 #include "bitmaps/Bitmaps648x480.h"
+
 
 // GxEPD2_3C<GxEPD2_420c_1680, GxEPD2_420c_1680::HEIGHT> display(GxEPD2_420c_1680(/*CS*/ SS_PIN, /*DC*/ DC_PIN, /*RST*/ RES_PIN, /*BUSY*/ BUSY_PIN)); // 
 GxEPD2_BW<GxEPD2_583_T8, GxEPD2_583_T8::HEIGHT> display(GxEPD2_583_T8(/*CS*/ SS_PIN, /*DC*/ DC_PIN, /*RST*/ RES_PIN, /*BUSY*/ BUSY_PIN)); // 
@@ -30,7 +32,7 @@ void setup()
   // delay(5000);
   display.setRotation(2);
   display.fillScreen(GxEPD_WHITE);
-  display.setCursor(0,0);
+  display.setCursor(50,50);
   // display.drawBitmap(0,0,Bitmap648x480_3,648,480,GxEPD_BLACK);
   // display.display(1);
 }
@@ -39,14 +41,16 @@ void setup()
 
 
 void loop() {
+  updateTime(millis());
   long now = millis();
   if (now - lastMsg > 100) {
     if (deviceConnected&&rxload.length()>0) {
         Serial.println(rxload);
-        display.setTextColor(GxEPD_BLACK);
-        display.setFont(&FreeMonoBold9pt7b);
-        display.print(rxload);
-        display.display(1);
+        initTimeStamp = strtol(rxload.c_str(),nullptr,10);
+        // display.setCursor(50,50);
+        // display.setTextColor(GxEPD_BLACK);
+        // display.print(rxload);
+        // display.display(1);
         rxload="";
     }
     if(Serial.available()>0){
@@ -57,11 +61,12 @@ void loop() {
         pNotifyCharacteristic->notify();
     }
     if(!deviceConnected)  Serial.println("deviceDisConnected");
-    // if(! deviceConnected)
-    // {
-    //   setupBLE("ESP32_BLE");
-    //   delay(100);
-    // }
     lastMsg = now;
+    display.setCursor(50,50);
+    display.fillScreen(GxEPD_WHITE);
+    display.setTextColor(GxEPD_BLACK);
+    display.setFont(&FreeMonoBold24pt7b);
+    display.printf(" %d : %d",timeInfo.Hour,timeInfo.Minute);
+    display.display(1);
   }
   }
