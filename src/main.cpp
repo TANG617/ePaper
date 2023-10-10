@@ -2,13 +2,14 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-06-01 17:33:37
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-10-10 14:49:30
+ * @LastEditTime: 2023-10-10 15:28:24
  * @FilePath: /ePaper/src/main.cpp
  * @Description: ePaper Partial Update
  * 
  * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
  */
 #include "ePaper.h"
+#include "BLE.h"
 #include "bitmaps/Bitmaps648x480.h"
 
 // GxEPD2_3C<GxEPD2_420c_1680, GxEPD2_420c_1680::HEIGHT> display(GxEPD2_420c_1680(/*CS*/ SS_PIN, /*DC*/ DC_PIN, /*RST*/ RES_PIN, /*BUSY*/ BUSY_PIN)); // 
@@ -22,25 +23,45 @@ const char HelloWorld[] = "When in the Course of human events, it becomes necess
 void setup()
 {
   ePaper_SPI.begin(CLK_PIN,-1,MOSI_PIN,SS_PIN);
+  setupBLE("ESP32_BLE");
 
   display.init(115200, true, 2, false, ePaper_SPI , SPISettings(10000000, MSBFIRST, SPI_MODE0)); // USE THIS for Waveshare boards with "clever" reset circuit, 2ms reset pulse
   display.clearScreen();
-  delay(5000);
+  // delay(5000);
   display.setRotation(2);
-  // display.setFont(&FreeSansBold24pt7b);
-  // display.setTextColor(GxEPD_RED);
-  // int16_t tbx, tby; uint16_t tbw, tbh;
-  // uint16_t wh = FreeMonoBold9pt7b.yAdvance;
-  // uint16_t wy = 110 - wh;
-  // display.firstPage();
-  // display.setPartialWindow(0, 0, display.width(), display.height());
   display.fillScreen(GxEPD_WHITE);
   display.setCursor(0,0);
-  display.drawBitmap(0,0,Bitmap648x480_3,648,480,GxEPD_BLACK);
-  display.display(1);
+  // display.drawBitmap(0,0,Bitmap648x480_3,648,480,GxEPD_BLACK);
+  // display.display(1);
 }
 
 
 
 
-void loop() {};
+void loop() {
+  long now = millis();
+  if (now - lastMsg > 100) {
+    if (deviceConnected&&rxload.length()>0) {
+        Serial.println(rxload);
+        display.setTextColor(GxEPD_BLACK);
+        display.setFont(&FreeMonoBold9pt7b);
+        display.print(rxload);
+        display.display(1);
+        rxload="";
+    }
+    if(Serial.available()>0){
+        String str=Serial.readString();
+        const char *newValue=str.c_str();
+        pReadCharacteristic->setValue(newValue);
+        pNotifyCharacteristic->setValue(newValue);
+        pNotifyCharacteristic->notify();
+    }
+    if(!deviceConnected)  Serial.println("deviceDisConnected");
+    // if(! deviceConnected)
+    // {
+    //   setupBLE("ESP32_BLE");
+    //   delay(100);
+    // }
+    lastMsg = now;
+  }
+  }

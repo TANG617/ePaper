@@ -1,8 +1,8 @@
 /*
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-05-28 00:28:22
- * @LastEditors: LiTang litang0617@outlook.com
- * @LastEditTime: 2023-06-11 13:14:36
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-10-10 15:07:24
  * @FilePath: /ePaper/src/ePaper.h
  * @Description: ePaper
  * 
