@@ -2,7 +2,7 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-06-01 17:33:37
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-10-10 18:54:25
+ * @LastEditTime: 2023-10-10 19:27:52
  * @FilePath: /ePaper/src/main.cpp
  * @Description: ePaper Partial Update
  * 
@@ -62,10 +62,10 @@ void loop() {
     }
     if(!deviceConnected)  Serial.println("deviceDisConnected");
     lastMsg = now;
-    display.setCursor(50,50);
+    display.setCursor(100,200);
     display.fillScreen(GxEPD_WHITE);
     display.setTextColor(GxEPD_BLACK);
-    display.setFont(&FreeMonoBold24pt7b);
+    display.setFont(&HarmonyOS_Sans_Bold60pt7b);
     display.printf(" %d : %d",timeInfo.Hour,timeInfo.Minute);
     display.display(1);
   }
