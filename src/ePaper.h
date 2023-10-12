@@ -2,7 +2,7 @@
  * @Author: LiTang litang0617@outlook.com
  * @Date: 2023-05-28 00:28:22
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-10-10 19:27:45
+ * @LastEditTime: 2023-10-12 08:29:03
  * @FilePath: /ePaper/src/ePaper.h
  * @Description: ePaper
  * 
@@ -40,9 +40,9 @@
 #include <GxEPD2_BW.h>
 // #include <GxEPD2_3C.h>
 
-#include <Fonts/FreeMonoBold24pt7b.h>
-#include <Fonts/FreeSansBold24pt7b.h>
-#include <Fonts/HarmonyFonts/HarmonyOS_Sans_Bold60pt7b.h>
+// #include <Fonts/FreeMonoBold24pt7b.h>
+// #include <Fonts/FreeSansBold24pt7b.h>
+#include <Fonts/HarmonyFonts/HarmonyOS_Sans_Bold100pt7b.h>
 
 
 
